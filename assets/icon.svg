@@ -1,13 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="VOWMERA personal progress icon">
- <defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#39324e"/><stop offset="1" stop-color="#131725"/></linearGradient>
-  <linearGradient id="light" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8ded1"/><stop offset=".58" stop-color="#ded0ff"/><stop offset="1" stop-color="#aeabfd"/></linearGradient>
- </defs>
- <rect width="512" height="512" rx="126" fill="url(#bg)"/>
- <circle cx="256" cy="256" r="169" fill="none" stroke="#bcaeea" opacity=".35" stroke-width="4" stroke-dasharray="3 17"/>
- <circle cx="256" cy="256" r="128" fill="none" stroke="#d9c7ff" opacity=".22" stroke-width="9"/>
- <path d="M256 109l34 116 113 31-113 33-34 114-32-114-115-33 115-31z" fill="url(#light)"/>
- <circle cx="256" cy="256" r="33" fill="#26243c"/>
- <path d="M241 256l12 12 24-27" fill="none" stroke="#efdcff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
- <circle cx="395" cy="122" r="11" fill="#f0c8bc"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title">
+<title id="title">Avenory artisan letterform</title>
+<rect width="120" height="120" rx="29" fill="#242133"/>
+<path d="M22 94 52.5 26.5c3.7-8.1 9.9-8.2 13.4.2L98 94" fill="none" stroke="#F2E5DA" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M39 75c12.1-1.4 28.5-1.2 45.7-.2" fill="none" stroke="#E9B89E" stroke-width="5" stroke-linecap="round"/>
+<path d="M21 101c20.1 3.7 53.8 4.7 77-1.4" fill="none" stroke="#E9B89E" stroke-width="1.65" stroke-linecap="round" opacity=".66"/>
+<circle cx="61" cy="16" r="3" fill="#E9B89E"/>
+<path d="m84 30 3.2 7.8L95 41l-7.8 3.2L84 52l-3.1-7.8-7.8-3.2 7.8-3.2L84 30z" fill="#B6A3D5"/>
+<path d="M27 43c-3.1 4.2-4.7 9.7-5 15" stroke="#B6A3D5" opacity=".65" stroke-width="1.7" stroke-linecap="round" fill="none"/>
 </svg>

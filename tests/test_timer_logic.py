@@ -4,7 +4,7 @@ from playwright.sync_api import sync_playwright
 import json,shutil,re
 ROOT=Path(__file__).resolve().parents[1]
 html=(ROOT/'index.html').read_text()
-for file in ('styles.css','vowmera.css','edition-five.css'):
+for file in ('styles.css','avenory-core.css','avenory-components.css'):
  css=re.sub(r'@import url\([^\n]+;\s*','',(ROOT/file).read_text())
  html=html.replace(f'<link rel="stylesheet" href="{file}" />',f'<style>{css}</style>')
 html=html.replace('<script src="app.js" defer></script>', '<script>'+(ROOT/'app.js').read_text().replace('</script>','<\\/script>')+'</script>')

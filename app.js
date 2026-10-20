@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const STORE = 'ninety-track-v1'; // Preserve all Ninety 1–3 local data for a safe VOWMERA migration.
+  const STORE = 'ninety-track-v1'; // Preserve all Ninety 1–3 local data for a safe AVENORY migration.
   const FOCUS_KEY = 'ninety-v3-focus-runtime';
   const GUEST_KEY = 'ninety-v3-guest-approved';
   const SESSION_KEY = 'ninety-v3-auth-session';
@@ -34,8 +34,83 @@
     'Progress rewards attention, not pressure.',
     'Be the person who returns to what matters.'
   ];
+  const QUOTE_LIBRARY = [
+  "Let the morning belong to the things you choose, not the things that call for you.",
+  "Start with one minute of courage. The next minute can take care of itself.",
+  "You do not need a perfect plan to make an honest beginning.",
+  "Protect your first hour. It can change the shape of your whole day.",
+  "The day is still yours to shape, even when it starts slowly.",
+  "Make room for one thing that matters before the world gets loud.",
+  "You have already begun. The next kind step is enough.",
+  "Morning is an invitation, not a deadline to be perfect.",
+  "A small promise kept is stronger than a grand promise made.",
+  "Give your attention somewhere you want your life to grow.",
+  "The work that matters rarely arrives with applause.",
+  "You can choose depth over noise, even for twenty minutes.",
+  "Focus is not force. It is returning to what you chose.",
+  "The middle of the day is a good place for a new beginning.",
+  "You are building evidence that you can count on yourself.",
+  "Turn the next hour into something you will be glad you protected.",
+  "A pause can be productive when it gives you back your attention.",
+  "There is no wasted start when you learn to come back.",
+  "Today does not need to be extraordinary to be worth remembering.",
+  "Give your effort a place to land, one task at a time.",
+  "Evening is for noticing, not only measuring.",
+  "What did you protect today that matters to you?",
+  "Let your rest be part of the plan, not an apology.",
+  "An unfinished list is not an unfinished person.",
+  "Tonight, count the ways you returned, not just what you completed.",
+  "There is strength in closing the day with compassion.",
+  "The next sunrise does not ask for a spotless yesterday.",
+  "Set down the noise. Keep what helped you grow.",
+  "You may be proud of a small, quiet victory.",
+  "Rest now. Your progress is allowed to breathe.",
+  "Your worth is never the number on the progress ring.",
+  "If today feels heavy, make the next step lighter.",
+  "A difficult moment can be met with a gentle decision.",
+  "Falling out of rhythm is an invitation to find a kinder one.",
+  "You can take care of yourself without earning the right to.",
+  "Begin again with the knowledge you gained, not with shame.",
+  "A slower pace is still forward when it is yours.",
+  "The point is not never slipping. It is knowing how to return.",
+  "A blank checkbox is information, never a verdict.",
+  "When the day feels loud, give yourself one quiet choice.",
+  "Momentum looks like several ordinary choices in a row.",
+  "Make consistency feel like a home, not a test.",
+  "Every deliberate repetition makes tomorrow a little easier.",
+  "Your small efforts are finding their way into a larger story.",
+  "There is something beautiful about becoming reliable to yourself.",
+  "Notice what worked. Give it another chance tomorrow.",
+  "The reward is more than a streak; it is knowing you showed up.",
+  "Your future self will recognize these quiet decisions.",
+  "Keep building, and leave room to be human.",
+  "The most convincing proof is the habit you repeat.",
+  "A better routine makes room for better rest.",
+  "Some victories are simply choosing not to give up on the day.",
+  "What you make easy to start becomes easier to repeat.",
+  "The best plan is the one your real life can hold.",
+  "An honest check-in changes more than a perfect-looking chart.",
+  "Let your environment make good choices feel natural.",
+  "You can reset your attention without resetting your story.",
+  "Commit to the next step; let tomorrow remain tomorrow.",
+  "A thoughtful hour is a gift you can give your future self.",
+  "The goal is a life that feels good to live, not just good to track.",
+  "Keep the promise small enough to keep, meaningful enough to matter.",
+  "Growth is often invisible until you look back with patience.",
+  "A gentle comeback is still a comeback.",
+  "Progress is a relationship with yourself, not a competition.",
+  "There is room for ambition and kindness in the same day.",
+  "Not every day shines. Every day can teach.",
+  "The habit is the bridge between who you are and what you practice.",
+  "Stay curious about your patterns instead of judging them.",
+  "One completed action can change the tone of the afternoon.",
+  "Come back to the task, then come back to yourself.",
+  "Your direction matters more than your speed.",
+  "A life with intention is made of moments with attention."
+];
   const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const ICONS = new Set(['grid','checks','target','chart','trophy','settings','bell','moon','sun','plus','minus','arrow-left','arrow-right','droplet','brain','shield','leaf','bed','clock','phone','sparkles','book','heart','activity','x','trash','pencil','download','upload','calendar','check','flame','coffee','play','pause','reset','lock','filter','menu']);
+  const brandGlyph = (size='') => `<img class="avenory-glyph ${size}" src="assets/avenory-mark.svg" alt="" width="46" height="46" loading="eager">`;
   const h = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const ico = (id, css = '') => `<svg aria-hidden="true" class="icon ${css}"><use href="#i-${ICONS.has(id) ? id : 'target'}"></use></svg>`;
   function dateLocal(d = new Date()) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
@@ -67,7 +142,7 @@
     {title:'Tidy your space',caption:'A clear space, a clearer mind',icon:'sparkles',color:'blue',category:'Lifestyle',kind:'min',target:10,unit:'min',step:5}
   ];
   function freshState() { const start=dateLocal(); return {
-    version:4, settings:{name:'You',startDate:start,theme:'dark',notifications:false,morning:'08:00',evening:'21:00',northStar:'',favoriteQuotes:[],weeklyFocusHours:25},
+    version:4, settings:{name:'You',startDate:start,theme:'dark',notifications:false,morning:'08:00',evening:'21:00',northStar:'',favoriteQuotes:[],savedFieldNotes:[],weeklyFocusHours:25},
     habits:habitDefaults(start),projects:[],logs:{},reminded:{},redemptions:[],customRewards:[],focusSessions:[],parkedThoughts:[]
   }; }
   function sanitizeState(raw) {
@@ -79,7 +154,15 @@
     const asNum=(v,min,max,fb)=>Number.isFinite(Number(v))?clamp(Number(v),min,max):fb;
     const s=raw.settings;
     const start=validDate(s.startDate,fallback.settings.startDate);
-    const settings={name:asText(s.name||'You',35),startDate:start,theme:s.theme==='dark'?'dark':'light',notifications:s.notifications===true,morning:/^([01]\d|2[0-3]):[0-5]\d$/.test(s.morning)?s.morning:'08:00',evening:/^([01]\d|2[0-3]):[0-5]\d$/.test(s.evening)?s.evening:'21:00',northStar:asText(s.northStar||'',150),weeklyFocusHours:asNum(s.weeklyFocusHours,0.5,80,25),favoriteQuotes:Array.isArray(s.favoriteQuotes)?[...new Set(s.favoriteQuotes.map(Number).filter(n=>Number.isInteger(n)&&n>=0&&n<QUOTES.length))].slice(0,30):[]};
+    const settings={name:asText(s.name||'You',35),startDate:start,theme:s.theme==='dark'?'dark':'light',notifications:s.notifications===true,morning:/^([01]\d|2[0-3]):[0-5]\d$/.test(s.morning)?s.morning:'08:00',evening:/^([01]\d|2[0-3]):[0-5]\d$/.test(s.evening)?s.evening:'21:00',northStar:asText(s.northStar||'',150),weeklyFocusHours:asNum(s.weeklyFocusHours,0.5,80,25),favoriteQuotes:Array.isArray(s.favoriteQuotes)?[...new Set(s.favoriteQuotes.map(Number).filter(n=>Number.isInteger(n)&&n>=0&&n<QUOTES.length))].slice(0,30):[],savedFieldNotes:Array.isArray(s.savedFieldNotes)?s.savedFieldNotes.filter(x=>typeof x==='string').map(x=>asText(x,210)).slice(-40):[],
+      focusPreferences:s.focusPreferences&&typeof s.focusPreferences==='object'?{
+        focus:Math.round(asNum(s.focusPreferences.focus,1,180,25)),short:Math.round(asNum(s.focusPreferences.short,1,60,5)),
+        long:Math.round(asNum(s.focusPreferences.long,1,90,15)),rounds:Math.round(asNum(s.focusPreferences.rounds,1,12,4)),
+        autoNext:s.focusPreferences.autoNext===true,sound:s.focusPreferences.sound!==false,
+        ambient:['off','rain','brown'].includes(s.focusPreferences.ambient)?s.focusPreferences.ambient:'off',
+        volume:asNum(s.focusPreferences.volume,0,1,.2),
+        presets:Array.isArray(s.focusPreferences.presets)?s.focusPreferences.presets.slice(0,12).filter(x=>x&&typeof x==='object').map(x=>({name:asText(x.name||'',28),minutes:Math.round(asNum(x.minutes,1,180,25))})).filter(x=>x.name):[]
+      }:null};
     const habits=raw.habits.slice(0,200).filter(x=>x&&typeof x==='object').map((x,i)=>({
       id:asId(x.id,`habit-restored-${i}`),title:asText(x.title||'Untitled habit',70),caption:asText(x.caption||'',120),icon:ICONS.has(x.icon)?x.icon:'target',color:['blue','green','orange'].includes(x.color)?x.color:'blue',category:asText(x.category||'Growth',32),
       kind:['binary','min','max'].includes(x.kind)?x.kind:'binary',target:asNum(x.target,.01,100000,1),unit:asText(x.unit||'',16),step:asNum(x.step,.01,10000,1),
@@ -114,10 +197,20 @@
     return sanitizeState(x);
   } catch(e) { console.warn('Using a fresh local tracker:',e); return freshState(); } }
   let state = loadState();
-  let ui = {page:'overview',date:dateLocal(),timerMinutes:25,remaining:1500,timerRunning:false,timerEnd:0,focusTarget:'deep-work',insightPeriod:'day',insightPick:'',quoteOffset:0,habitDetail:'',authGate:!localStorage.getItem(GUEST_KEY)};
+  let rememberedSession=null;
+  try { rememberedSession=JSON.parse(localStorage.getItem(SESSION_KEY)||'null'); } catch {}
+  const rememberedUser=cloudEnabled && rememberedSession?.user?.id ? rememberedSession.user : null;
+  let ui = {page:'overview',date:dateLocal(),timerMinutes:25,remaining:1500,timerRunning:false,timerEnd:0,focusTarget:'deep-work',insightPeriod:'day',insightPick:'',quoteOffset:0,habitDetail:'',authGate:!rememberedUser&&!localStorage.getItem(GUEST_KEY)};
   let currentStore=STORE;
-  let account=null;
-  let cloudSession=null;
+  let account=rememberedUser?{id:rememberedUser.id,email:rememberedUser.email||''}:null;
+  let cloudSession=rememberedUser?rememberedSession:null;
+  // Show the correct user's local snapshot immediately, without a login-screen flash.
+  // If the network fails, the account remains usable and changes remain queued.
+  if(account){
+    currentStore=`ninety-v3-user-${account.id}`;
+    try{const raw=localStorage.getItem(currentStore);state=raw?sanitizeState(JSON.parse(raw)):freshState();}
+    catch{state=freshState();}
+  }
   let cloudRevision=0;
   let cloudError='';
   let cloudStatus='Local mode';
@@ -127,7 +220,25 @@
   let audioContext=null, ambientSource=null, ambientGain=null;
   const focusPrefs=(()=>{try{return {...{focus:25,short:5,long:15,rounds:4,autoNext:false,sound:true,ambient:'off',volume:.2,presets:[]},...JSON.parse(localStorage.getItem('ninety-v3-focus-prefs')||'{}')}}catch{return {focus:25,short:5,long:15,rounds:4,autoNext:false,sound:true,ambient:'off',volume:.2,presets:[]}}})();
   let focusRun=(()=>{try{return JSON.parse(localStorage.getItem(FOCUS_KEY)||'null')||{mode:'focus',remaining:focusPrefs.focus*60,duration:focusPrefs.focus*60,elapsed:0,running:false,end:0,task:'',target:'deep-work',round:0,startedAt:0}}catch{return {mode:'focus',remaining:focusPrefs.focus*60,duration:focusPrefs.focus*60,elapsed:0,running:false,end:0,task:'',target:'deep-work',round:0,startedAt:0}}})();
-  function persistFocus(){try{localStorage.setItem(FOCUS_KEY,JSON.stringify(focusRun));localStorage.setItem('ninety-v3-focus-prefs',JSON.stringify(focusPrefs))}catch{}}
+  function applySavedFocusPreferences(){
+    const saved=state?.settings?.focusPreferences;
+    if(saved && typeof saved==='object')Object.assign(focusPrefs,saved);
+    try{localStorage.setItem('ninety-v3-focus-prefs',JSON.stringify(focusPrefs));}catch{}
+  }
+  function persistFocus(){
+    try{localStorage.setItem(FOCUS_KEY,JSON.stringify(focusRun));localStorage.setItem('ninety-v3-focus-prefs',JSON.stringify(focusPrefs));}catch{}
+    const prefs={focus:focusPrefs.focus,short:focusPrefs.short,long:focusPrefs.long,rounds:focusPrefs.rounds,
+      autoNext:focusPrefs.autoNext,sound:focusPrefs.sound,ambient:focusPrefs.ambient,volume:focusPrefs.volume,
+      presets:(focusPrefs.presets||[]).map(x=>({name:x.name,minutes:x.minutes}))};
+    if(JSON.stringify(state.settings.focusPreferences||null)!==JSON.stringify(prefs)){
+      state.settings.focusPreferences=prefs;save();
+    }
+  }
+  applySavedFocusPreferences();
+  if(account){
+    try{const meta=JSON.parse(localStorage.getItem(`ninety-v3-meta-${account.id}`)||'{}');cloudRevision=Number(meta.revision||0);unsynced=!!meta.dirty;cloudStatus='Restoring your account…';}
+    catch{cloudStatus='Reconnecting…';}
+  }
 
   let toastTimer;
   function save() { try {localStorage.setItem(currentStore,JSON.stringify(state)); if(account){unsynced=true;syncCount++;setCloudMeta({revision:cloudRevision,dirty:true});cloudStatus='Changes waiting to sync';scheduleSync();}} catch(e) { toast('Local storage is unavailable. Export a backup!');} }
@@ -207,13 +318,13 @@
   function toast(message){ const el=document.getElementById('toast-root');el.innerHTML=`<div class="toast" role="status">${ico('check')}<span>${h(message)}</span></div>`;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.replaceChildren(),3600); }
   const nav=[['overview','grid','Today'],['habits','checks','Habits'],['projects','target','Projects'],['focus','clock','Focus Studio'],['insights','chart','Progress'],['rewards','trophy','Rewards'],['sanctuary','heart','Reset space'],['settings','settings','Settings'],['account','lock','Account']];
   function sideNav(){const day=challengeDay(),st=stats();return `<aside class="sidebar v4-sidebar" aria-label="Primary navigation">
-    <div class="brand v4-brand"><div class="brand-symbol v4-brand-symbol" aria-hidden="true">✶</div><div><div class="brand-name">AVENORY<span>.</span></div><div class="brand-tag">BECOME, ONE DAY AT A TIME</div></div></div>
+    <div class="brand v4-brand"><div class="brand-symbol v4-brand-symbol" aria-hidden="true">${brandGlyph()}</div><div><div class="brand-name">AVENORY<span>.</span></div><div class="brand-tag">SMALL DAYS. BRAVE CHANGES.</div></div></div>
     <div class="v4-sidebar-ritual"><span class="v4-micro-label">YOUR 90-DAY EDITION</span><b>${String(day).padStart(2,'0')} <i>/ 90</i></b><div class="progress-track"><div class="progress-fill" style="width:${day/90*100}%"></div></div><small>Write a story worth repeating.</small></div>
     <div class="nav-group-label">EXPLORE YOUR SPACE</div><div class="nav-list">${nav.map(([p,icon,label])=>`<button type="button" class="nav-item ${ui.page===p?'active':''}" data-nav="${p}" ${ui.page===p?'aria-current="page"':''}>${ico(icon)}<span>${label}</span>${p==='habits'?`<span class="nav-badge">${state.habits.length}</span>`:''}</button>`).join('')}</div>
-    <div class="side-lower"><button type="button" class="v4-side-help" data-nav="sanctuary"><span class="v4-micro-label">NEED A RESET?</span><b>Pause. Breathe.<br>Choose again. ↗</b><small>Open your private sanctuary</small></button><div class="side-footer">✳ YOUR PACE. YOUR PROGRESS.<br>ONE DAY AT A TIME.</div></div></aside>`; }
+    <div class="side-lower"><button type="button" class="v4-side-help" data-nav="sanctuary"><span class="v4-micro-label">NEED A RESET?</span><b>Pause. Breathe.<br>Choose again. ↗</b><small>Open your private sanctuary</small></button><div class="side-footer">✳ BUILT FOR YOUR REAL LIFE<br><a class="avenory-credit" href="mailto:alsami1070@gmail.com" title="Contact developer Al Sami">DESIGNED & CRAFTED BY AL SAMI ↗</a></div></div></aside>`; }
   function mobileNav(){const mobile=['overview','habits','focus','insights','sanctuary'];const labels={overview:'Today',habits:'Habits',focus:'Focus',insights:'Progress',sanctuary:'Reset'};return `<nav class="mobile-nav" aria-label="Primary mobile navigation">${nav.filter(x=>mobile.includes(x[0])).map(([page,icon])=>`<button type="button" data-nav="${page}" class="${ui.page===page?'active':''}" aria-label="${labels[page]}" ${ui.page===page?'aria-current="page"':''}>${ico(icon)}<span>${labels[page]}</span></button>`).join('')}</nav>`; }
   function topbar(){return `<div class="topbar v4-topbar"><span class="top-eyebrow"><span class="v4-status-dot"></span> BUILD YOUR OWN PROOF <span class="v4-top-slash"> / </span> ${h(ui.page.toUpperCase())}</span><div class="top-actions"><span class="pill-date">${ico('calendar','i-sm')} ${h(niceDate(dateLocal(),{weekday:'short',month:'short',day:'numeric'}))}</span><button class="v4-help-quick" data-nav="sanctuary">${ico('heart','i-sm')} Take a pause</button><button class="icon-btn" data-action="theme" aria-label="Toggle light and dark appearance">${ico(state.settings.theme==='dark'?'sun':'moon')}</button><button class="user-dot" data-nav="account" aria-label="Account and synchronization">${h((state.settings.name||'Y').charAt(0).toUpperCase())}</button></div></div>`; }
-  function mobileTop(){return `<div class="mobile-top v4-mobile-top"><div class="brand v4-brand"><div class="brand-symbol">✶</div><div class="brand-name">AVENORY<span>.</span></div></div><div class="top-actions"><button class="icon-btn" data-nav="sanctuary" aria-label="Open private sanctuary">${ico('heart')}</button><button class="icon-btn" data-action="open-command" aria-label="Open all features">${ico('menu')}</button></div></div>`; }
+  function mobileTop(){return `<div class="mobile-top v4-mobile-top"><div class="brand v4-brand"><div class="brand-symbol">${brandGlyph()}</div><div class="brand-name">AVENORY<span>.</span></div></div><div class="top-actions"><button class="icon-btn" data-nav="sanctuary" aria-label="Open private sanctuary">${ico('heart')}</button><button class="icon-btn" data-action="open-command" aria-label="Open all features">${ico('menu')}</button></div></div>`; }
   function header(eyebrow,title,sub,action=''){return `<div class="page-head"><div><span class="eyebrow">${eyebrow}</span><h1 class="page-title">${title}</h1><p class="subhead">${sub}</p></div>${action}</div>`;}
   function statCard(label,num,unit,foot,icon,color=''){return `<div class="stat-card"><div class="stat-heading"><span>${label}</span><span class="stat-icon ${color}">${ico(icon)}</span></div><div class="stat-number">${num}<span class="stat-unit">${unit}</span></div><div class="stat-foot">${foot}</div></div>`;}
   const rewardCatalog = [
@@ -301,7 +412,15 @@
   function journeyStrip(){const st=stats(),day=challengeDay(),score=dayScore(chosenDate());return `<section class="journey-ribbon" aria-label="Challenge progress"><div><span class="mini-eyebrow">90-DAY CHALLENGE</span><h2>${day}<span>/90</span> <small>days on your journey</small></h2></div><div class="journey-main"><div class="ribbon-label"><span>Journey timeline</span><strong>${Math.round(day/90*100)}%</strong></div><div class="progress-track" role="progressbar" aria-valuenow="${day}" aria-valuemin="0" aria-valuemax="90" aria-label="Challenge days"><div class="progress-fill" style="width:${round(day/90*100)}%"></div></div><div class="ribbon-sub"><span>START · ${niceDate(state.settings.startDate)}</span><span>FINISH · ${niceDate(endDate())}</span></div></div><div class="ribbon-total"><span>Today</span><b>${score.pct}%</b><small>${score.done}/${score.total} complete</small></div></section>`;}
   function quickWins(){const today=chosenDate(),sc=dayScore(today),dateFmt=today===dateLocal()?'TODAY':niceDate(today).toUpperCase();return `<div class="micro-status"><span class="status-pulse"></span><span>${dateFmt} · ${sc.done} of ${sc.total} check-ins</span><strong>${xpBreakdown(today).total} XP earned</strong></div>`;}
 
-  function miniWeek(){const date=parseDate(dateLocal());const mon=shiftDay(dateLocal(),-(date.getDay()+6)%7);const days=Array.from({length:7},(_,i)=>shiftDay(mon,i));return `<div class="card weekday-card"><div class="section-header"><div><h3 class="section-title">This week</h3><p class="section-sub">A little better, every day.</p></div>${ico('calendar')}</div><div class="mini-days">${days.map(d=>{const s=dayScore(d);const future=d>dateLocal()||d<state.settings.startDate;return `<div class="mini-day"><small>${DAYS[parseDate(d).getDay()].charAt(0)}</small><div title="${niceDate(d)}: ${future?'Not tracked yet':`${s.done}/${s.total} habits`}" class="day-circle ${future?'':s.pct>=75?'hit':s.done?'partial':''} ${d===dateLocal()?'today':''}">${future?'·':s.pct>=75?ico('check','i-sm'):parseDate(d).getDate()}</div></div>`}).join('')}</div></div>`;}
+  function miniWeek(){
+    const now=dateLocal(),date=parseDate(now),mon=shiftDay(now,-((date.getDay()+6)%7));
+    const days=Array.from({length:7},(_,i)=>shiftDay(mon,i));
+    const logged=days.filter(d=>d<=now&&d>=state.settings.startDate&&dayScore(d).total>0).length;
+    return `<section class="card weekday-card avenory-week"><div class="section-header"><div><span class="avenory-eyebrow">SEVEN DAYS / ONE STORY</span><h3 class="section-title">This week</h3><p class="section-sub">A fresh start is one day away.</p></div><span class="avenory-week-count">${logged} / 7 <small>TRACKED</small></span></div><div class="mini-days">${days.map(d=>{
+      const s=dayScore(d),future=d>now||d<state.settings.startDate,isToday=d===now,dayName=niceDate(d,{weekday:'long'});
+      return `<button type="button" ${future?'disabled':''} data-jump-day="${d}" class="mini-day avenory-week-day ${isToday?'current':''}" title="${h(dayName)} ${h(niceDate(d))}: ${s.done} of ${s.total} habits" aria-label="${h(dayName)} ${h(niceDate(d))}, ${future?'not yet available':`${s.done} of ${s.total} habits complete`}"><small>${h(dayName.slice(0,2))}</small><span class="day-circle ${future?'':s.pct>=75?'hit':s.done?'partial':''} ${isToday?'today':''}">${future?'·':s.pct>=75?ico('check','i-sm'):parseDate(d).getDate()}</span><i class="avenory-week-pip" style="--pct:${s.pct}%"></i></button>`;
+    }).join('')}</div><div class="avenory-week-footer"><span>YOUR WEEK IN ONE GLANCE</span><button data-nav="insights">See trends ↗</button></div></section>`;
+  }
   function habitRow(habit,date){const e=habitEntry(habit,date);const done=completed(habit,date);const raw=Number(e.value||0);
     let controls='';
     if(habit.kind==='min')controls=`<div class="habit-actions"><button class="step-btn" data-qty="${h(habit.id)}" data-change="-${habit.step}" aria-label="Decrease ${h(habit.title)}">${ico('minus','i-sm')}</button><span class="step-value" data-quick-qty="${h(habit.id)}" role="button" tabindex="0" title="Tap to enter exact amount" aria-label="${durationLabel(e.logged?raw:0,habit.unit)} · Tap to enter exact amount">${durationLabel(e.logged?raw:0,habit.unit)}</span><button class="step-btn" data-qty="${h(habit.id)}" data-change="${habit.step}" aria-label="Increase ${h(habit.title)}">${ico('plus','i-sm')}</button></div>`;
@@ -312,15 +431,134 @@
     <div class="section-header" style="margin:0 0 9px"><div class="day-nav"><button data-action="prev-day" aria-label="Previous day" ${date<=state.settings.startDate?'disabled':''}>${ico('arrow-left','i-sm')}</button><span>${date===today?'Today':niceDate(date,{month:'short',day:'numeric'})}</span><button data-action="next-day" aria-label="Next day" ${date>=today||date>=endDate()?'disabled':''}>${ico('arrow-right','i-sm')}</button></div><button class="text-link" data-nav="habits">Manage ${ico('arrow-right','i-sm')}</button></div>
     ${scheduledHabits(date).length ? scheduledHabits(date).map(x=>habitRow(x,date)).join(''):`<div class="empty-state">${ico('calendar')}<h3>No habits scheduled</h3><p>You have a free day. Enjoy your reset, or add a habit.</p><button data-action="add-habit" class="btn btn-primary">Add a habit</button></div>`}
     <div class="daily-progress"><div class="bar-labels"><b>Today's progress</b><span>${score.pct}% complete</span></div><div class="progress-track"><div class="progress-fill" style="width:${score.pct}%"></div></div></div></div>`;}
-  function reflection(){const log=getLog(chosenDate());return `<div class="card reflection-card"><div class="section-header"><div><h3 class="section-title">Daily check-in</h3><p class="section-sub">How are you feeling?</p></div>${ico('heart')}</div><div class="moods">${[['great','😊','Great'],['okay','😌','Okay'],['low','🌧️','Low']].map(([v,emoji,label])=>`<button class="mood ${log.mood===v?'active':''}" data-mood="${v}" aria-pressed="${log.mood===v}"><span class="face">${emoji}</span>${label}</button>`).join('')}</div><label class="field-label" for="day-note">One thought from today</label><textarea id="day-note" class="textarea" data-note placeholder="A win, a lesson, or something you're grateful for...">${h(log.note||'')}</textarea><div class="form-hint">Saved when you finish editing. Notes stay on this device in guest mode or in your account when cloud sync is enabled.</div></div>`;}
+  function reflection(){
+    const log=getLog(chosenDate()),moodCopy={great:['A little light goes a long way.','Enjoy the good without needing to earn it.'],okay:['An ordinary day can still be meaningful.','Small steps are enough today.'],low:['You can have a hard day and still be moving forward.','Make room for rest, then choose one gentle step.']};
+    const feedback=moodCopy[log.mood];
+    return `<section class="card reflection-card avenory-reflection" aria-label="Daily check-in"><div class="section-header"><div><span class="avenory-eyebrow">YOUR DAILY MOMENT</span><h3 class="section-title">How did today feel?</h3><p class="section-sub">There is no wrong answer.</p></div><span class="avenory-mood-emblem" aria-hidden="true">◡</span></div>
+      <div class="moods">${[['great','☀','Bright'],['okay','◒','Steady'],['low','☁','Heavy']].map(([v,emoji,label])=>`<button type="button" class="mood ${log.mood===v?'active':''}" data-mood="${v}" aria-pressed="${log.mood===v}"><span class="face" aria-hidden="true">${emoji}</span><span>${label}</span><span class="avenory-mood-check" aria-hidden="true">✓</span></button>`).join('')}</div>
+      <div class="avenory-mood-feedback ${feedback?'is-visible':''}" aria-live="polite">${feedback?`<span class="avenory-mood-spark">✦</span><p><strong>${h(feedback[0])}</strong><small>${h(feedback[1])}</small></p>`:'<span class="avenory-mood-spark">✧</span><p><strong>A moment just for you.</strong><small>Choose the word that feels closest to today.</small></p>'}</div>
+      <div class="avenory-journal-header"><label class="field-label" for="day-note">A line to remember</label><span class="avenory-note-status" id="note-save-status" role="status" aria-live="polite">${(log.note||'').length?'✓ Saved':'Autosaves as you write'}</span></div>
+      <textarea id="day-note" class="textarea" data-note maxlength="1200" placeholder="One thing I learned, noticed, or appreciated today…">${h(log.note||'')}</textarea>
+      <p class="avenory-note-footer"><span>No perfect words needed.</span><span>${account?'Private cloud account · sync when online':'Private on this device until you sign in'}</span></p></section>`;
+  }
   function focusMini(){const p=state.projects.find(p=>projectEligible(p,chosenDate()))||state.projects[0];const goal=state.habits.find(h=>h.id==='self-growth'),growthDone=goal&&habitEntry(goal,chosenDate()).logged?Number(habitEntry(goal,chosenDate()).value||0):0;
     return `<div class="focus-mini"><div class="section-header"><div><h3 class="section-title">Your growth hour</h3><p class="section-sub">Protect time for what matters.</p></div><span class="stat-icon">${ico('sparkles')}</span></div><div class="mini-feature"><div class="mini-feature-icon">${ico(p?'target':'book','i-lg')}</div><div><p class="mini-feature-title">${h(p?p.title:'Choose a skill to master')}</p><p class="mini-feature-sub">${h(p?`${p.durationDays}-day growth project`:'Define your next personal project')}</p></div></div><div class="mini-focus-goal"><div><span>TODAY'S GROWTH TIME</span><br><strong>${growthDone} <span class="muted" style="font-size:12px">/ ${goal?goal.target:60} min</span></strong></div><span class="stat-icon green">${ico('target')}</span></div><button class="btn btn-primary btn-wide" data-nav="${p?'focus':'projects'}">${p?'Start a focus session':'Create a growth project'} ${ico('arrow-right','i-sm')}</button></div>`;}
-  // VOWMERA design system: quote rituals, journey map, honest pattern analytics.
+  // AVENORY Field Notes: purposeful copy, not random aphorisms.
+  // Derived solely from local state (time, mood, progress, current feature).
+  const FIELD_NOTES={
+    morning:[
+      ['You do not need to win the morning.','Just give its first good minute a purpose.'],
+      ['Begin where your feet are.','One small action can give the day its shape.'],
+      ['The first promise is simply to begin.','Pick the habit you can keep right now.'],
+      ['Your morning can be a quiet vote.','Choose what deserves your attention.'],
+      ['Start with the doable thing.','Confidence follows evidence, not the other way around.'],
+      ['Make the beginning welcoming.','Consistency grows where friction is low.']],
+    day:[
+      ['An ordinary hour can change direction.','Your next decision is small, but it is yours.'],
+      ['Give the next task your whole attention.','Depth happens one return at a time.'],
+      ['You are not late for your own life.','The next honest action still counts.'],
+      ['Stop measuring the distance.','Make the next move visible.'],
+      ['Progress has a human pace.','Build what your real day can hold.'],
+      ['There is no perfect version of today.','There is the part of it you can still shape.']],
+    evening:[
+      ['Close the day with evidence, not judgment.','What did you do that mattered to you?'],
+      ['Rest belongs inside the plan.','Tomorrow will need a cared-for you.'],
+      ['You can leave some things undone.','Notice what moved, however quietly.'],
+      ['Let the day end gently.','A new attempt does not erase this one.'],
+      ['The light can go out. Your effort stays.','Give yourself credit for showing up.'],
+      ['A record is not a verdict.','It is a map for tomorrow.']],
+    gentle:[
+      ['A hard day does not need a hard voice.','Choose one kind action before the next demand.'],
+      ['You can feel heavy and still move.','A small step is enough of a start.'],
+      ['Your value does not rise with a percentage.','Take the breath you need.'],
+      ['There is no penalty for beginning again.','Return as often as life requires.'],
+      ['Try softer, not smaller.','You deserve a plan that makes room for you.'],
+      ['A blank square is not failure.','It is simply a place you may return to.']],
+    momentum:[
+      ['Look at what repetition is building.','It is becoming easier to trust your own word.'],
+      ['Your effort is gathering proof.','One more deliberate choice is enough.'],
+      ['The rhythm is yours now.','Protect it without making it a prison.'],
+      ['These ordinary days are the transformation.','Notice how far the small things have carried you.'],
+      ['This is what showing up looks like.','You did not wait for perfect conditions.'],
+      ['Give progress room to breathe.','A kind pace lasts longer.']],
+    focus:[
+      ['Make a little room for deep work.','Choose one task; let the other tabs wait.'],
+      ['Focus is an act of return.','Every distraction is another chance to come back.'],
+      ['Your attention deserves a home.','Give it twenty-five honest minutes.'],
+      ['Do less at once. Go further in one thing.','Let this session have a clear purpose.'],
+      ['The work is allowed to be slow.','Stay with the next useful minute.'],
+      ['Protect the quiet.','Progress can happen without anyone watching.']],
+    habits:[
+      ['Keep the promise sized for today.','The point is to come back tomorrow, too.'],
+      ['Make the right action the easy action.','Design a day that supports the person you want to be.'],
+      ['One checkmark is a small piece of trust.','No need to make it a performance.'],
+      ['Your habits should help you live.','Change the goal when life asks you to.'],
+      ['The next repeat is the achievement.','Celebrate the simple things.'],
+      ['Consistency is built in the details.','What can you make easier to do today?']],
+    projects:[
+      ['Your future skill is built in sessions.','Name what you will practice next.'],
+      ['Work on the work, not the image of working.','One page, one line, one solved problem.'],
+      ['Progress likes a clear destination.','Break the big ambition into one honest practice.'],
+      ['Learn in public to yourself.','Keep the evidence; it adds up.'],
+      ['You are allowed to be a beginner.','Practice is how that changes.'],
+      ['Build the skill at a sustainable pace.','A repeatable hour can carry a big dream.']],
+    insights:[
+      ['The graph is a mirror, not a judge.','Use it to learn what helps.'],
+      ['Patterns tell a kinder truth than a bad day.','Look for what you can repeat.'],
+      ['Your story has data and context.','Make room for both.'],
+      ['The trend matters more than one dot.','Learn from the quiet weeks too.'],
+      ['Curiosity beats self-criticism.','Notice what days made progress easier.'],
+      ['Numbers can guide your next move.','They do not define your worth.']],
+    rewards:[
+      ['Make room to celebrate the work.','Joy is part of a sustainable plan.'],
+      ['You have earned a little kindness.','Choose rewards that nourish your future self.'],
+      ['A reward is not the whole story.','The real win is learning to trust your actions.'],
+      ['Celebrate the person who showed up.','Not just the number beside the trophy.'],
+      ['Keep your rewards meaningful.','The best ones make it easier to return.'],
+      ['Progress deserves a pause.','Enjoy what your patience has made possible.']],
+    sanctuary:[
+      ['Take a breath before a decision.','You can choose again without shame.'],
+      ['An urge is a moment, not an instruction.','Give it room to pass.'],
+      ['You are allowed a quiet reset.','Stand up, breathe out, notice the room.'],
+      ['You can interrupt the automatic path.','A short pause creates a choice.'],
+      ['A difficult moment does not define you.','Return to what helps.'],
+      ['Protect your peace with a gentle action.','A glass of water or a walk is a start.']],
+    account:[
+      ['Your story belongs to you.','Keep it safe, accessible, and yours.'],
+      ['Return when life has room.','Your progress will be here.'],
+      ['A fresh session; the same story.','Continue exactly where you left off.'],
+      ['Your journey deserves continuity.','Save it well and carry it forward.']],
+    reflect:[
+      ['Notice what was true today.','Even a short sentence can become a meaningful record.'],
+      ['Write for tomorrow-you.','What would you want to remember?'],
+      ['There is no right way to reflect.','Try one honest line.'],
+      ['The day is worth a sentence.','Give the small moments somewhere to live.']]
+  };
   function currentQuoteIndex(){return ((challengeDay()||1)-1+QUOTES.length)%QUOTES.length;}
-  function quoteInlay(kind='day'){
-    const idx=kind==='day'?currentQuoteIndex():kind==='focus'?3:kind==='sanctuary'?9:((currentQuoteIndex()+5)%QUOTES.length);
-    const fav=(state.settings.favoriteQuotes||[]).includes(idx);
-    return `<div class="v4-quote-inlay"><div class="v4-quote-glyph" aria-hidden="true">“</div><div><span class="v4-micro-label">${kind==='focus'?'A THOUGHT FOR YOUR SESSION':kind==='sanctuary'?'WHEN THINGS FEEL DIFFICULT':'A NOTE TO YOUR FUTURE SELF'}</span><p>${h(QUOTES[idx])}</p></div><button data-favorite-quote="${idx}" class="v4-quote-save ${fav?'saved':''}" aria-label="${fav?'Remove quote from':'Save quote to'} your favorites" aria-pressed="${fav}" title="${fav?'Unsave':'Save'} this thought">${fav?'♥':'♡'}</button></div>`;
+  function quoteContext(){
+    const mood=getLog(dateLocal()).mood,sc=dayScore(dateLocal()),hour=new Date().getHours();
+    if(mood==='low')return 'gentle';
+    if(sc.total&&sc.pct>=75)return 'momentum';
+    if(hour<11)return 'morning';if(hour>=19)return 'evening';return 'day';
+  }
+  function quoteSelection(purpose='moment'){
+    const context=purpose==='moment'?quoteContext():(FIELD_NOTES[purpose]?purpose:'reflect');
+    const now=new Date(),slot=Math.floor((now.getHours()*60+now.getMinutes())/9);
+    const seed=Array.from(`${dateLocal()}:${context}`).reduce((n,c)=>(n*33+c.charCodeAt(0))>>>0,5381);
+    const quotes=FIELD_NOTES[context];
+    // Coprime stepping gives each quote a turn before repeating.
+    const index=(seed+slot*5)%quotes.length;
+    return {index,context,line:quotes[index][0],aside:quotes[index][1],slot};
+  }
+  function quoteInlay(kind='reflect'){
+    const scene=quoteSelection(kind);
+    const labels={focus:'BEFORE YOUR NEXT SESSION',habits:'THE DAILY PRACTICE',projects:'YOUR WORK IN PROGRESS',
+      insights:'A NOTE ON YOUR NUMBERS',rewards:'A MOMENT TO CELEBRATE',sanctuary:'A PLACE TO PAUSE',account:'YOUR STORY, SAFELY KEPT',reflect:'A NOTE TO YOURSELF'};
+    return `<aside class="avenory-field-strip" data-field-note="${h(scene.context)}" aria-label="A thought for this part of your journey">
+      <div class="avenory-strip-seal" aria-hidden="true">${brandGlyph('tiny')}</div>
+      <div class="avenory-strip-words"><span class="avenory-eyebrow">FIELD NOTE / ${h(labels[scene.context]||'FOR THIS MOMENT')}</span><p>${h(scene.line)}</p><small>${h(scene.aside)}</small></div>
+      <div class="avenory-strip-end">A / ${String(scene.index+1).padStart(2,'0')} <button class="avenory-bookmark" data-keep-thought="${h(scene.context)}" aria-label="Save this thought" title="Keep this thought">${ico('heart','i-sm')}</button></div>
+    </aside>`;
   }
   function ninetyAtlas(compact=false){const from=state.settings.startDate;let completedDays=0;
     const dots=Array.from({length:90},(_,i)=>{const date=shiftDay(from,i),future=date>dateLocal()||date>endDate(),score=dayScore(date);if(!future && score.pct>=75)completedDays++;
@@ -351,7 +589,7 @@
   <section class="v4-sanctuary-hero"><div class="v4-micro-label">THE PAUSE PROTOCOL · NO SHAME, JUST CHOICE</div><h2>You are more than<br><em>one difficult moment.</em></h2><p>Pause what you are doing. Unclench your shoulders. Give yourself one minute before you decide what happens next.</p><button class="btn btn-primary" data-action="breathe" aria-label="Start guided breathing pause">${ico('heart','i-sm')} Begin a 60-second reset</button><div class="v4-soft-orbit" aria-hidden="true"><div>✳</div></div></section>
   ${quoteInlay('sanctuary')}
   <div class="v4-coping-grid">${[['01','CHANGE YOUR SPACE','Step away from the screen and move somewhere different.'],['02','BREATHE FIRST','Inhale softly for four, hold four, exhale for six. Repeat without forcing it.'],['03','REPLACE THE LOOP','Stretch, drink water, walk, or start a two-minute task.'],['04','RETURN WITHOUT BLAME','One hard moment does not erase every choice you made before it.']].map(([n,title,copy])=>`<article class="v4-coping-card"><span>${n}</span><h3>${title}</h3><p>${copy}</p></article>`).join('')}</div>
-  <section class="card v4-favorites"><div class="section-header"><div><span class="v4-micro-label">YOUR PERSONAL LIBRARY</span><h3 class="section-title">Words you chose to keep</h3></div></div>${fav.length?fav.map(i=>`<blockquote><p>“${h(QUOTES[i])}”</p><button data-favorite-quote="${i}" aria-label="Remove from saved quotes">Remove ♥</button></blockquote>`).join(''):'<p class="section-sub">Save any thought using the heart beside it. Your favorites will appear here.</p>'}</section>
+  <section class="card v4-favorites"><div class="section-header"><div><span class="v4-micro-label">YOUR PERSONAL LIBRARY</span><h3 class="section-title">Words you chose to keep</h3></div></div>${(state.settings.savedFieldNotes||[]).length||fav.length?`<div class="avenory-kept-notes">${(state.settings.savedFieldNotes||[]).map((quote,i)=>`<blockquote><p>“${h(quote)}”</p><button data-remove-thought="${i}" aria-label="Remove saved thought">Remove</button></blockquote>`).join('')}${fav.map(i=>`<blockquote><p>“${h(QUOTES[i])}”</p><button data-favorite-quote="${i}" aria-label="Remove saved quote">Remove</button></blockquote>`).join('')}</div>`:'<p class="section-sub">Keep a thought with the small heart beside it. You can return to it here.</p>'}</section>
   <div class="v4-reminder-boundary">This space offers self-guided reflection, not clinical treatment or content blocking. It keeps your existing “Clear Mind” label discreet, and you can always edit or remove that habit.</div>`; }
   function commandSheet(){return `<div class="v4-command-backdrop" data-command-close><div class="v4-command-modal" role="dialog" aria-modal="true" aria-label="All features"><div class="v4-command-head"><div><span class="v4-micro-label">YOUR ENTIRE SPACE</span><h2>Where to next?</h2></div><button class="icon-btn" data-action="close-command" aria-label="Close feature menu">${ico('x')}</button></div><div class="v4-command-items">${nav.map(([p,icon,label])=>`<button type="button" data-nav="${p}">${ico(icon)}<span>${label}</span>${ico('arrow-right','i-sm')}</button>`).join('')}</div><p>TIP · Press <kbd>/</kbd> to open this menu from anywhere.</p></div></div>`; }
   function openCommand(){lastActiveElement=document.activeElement;document.getElementById('command-root').innerHTML=commandSheet();document.querySelector('.v4-command-modal [data-nav]')?.focus();}
@@ -387,18 +625,34 @@
     const weekNow=compareWindow(7),last=compareWindow(7,7); const diff=weekNow.pct-last.pct;
     return `<section class="card v5-pulse-map"><div class="section-header"><div><span class="v5-caption">30-DAY SIGNAL</span><h2 class="section-title">A portrait of your consistency</h2><p class="section-sub">A quiet record of the days you actually checked in.</p></div><button class="text-link" data-nav="insights">Open insights ↗</button></div><div class="v5-map"><div class="v5-map-grid" role="group" aria-label="Daily progress in the past thirty days">${days.map(d=>{const eligible=d>=state.settings.startDate&&d<=endDate(),s=eligible?dayScore(d):{total:0,pct:0};return `<button ${!eligible?'disabled':''} class="v5-map-cell" style="--intensity:${s.total?s.pct/100:0};" data-jump-day="${d}" aria-label="${h(niceDate(d))}: ${eligible?s.pct+' percent complete':'Before challenge'}" title="${h(niceDate(d))} · ${eligible?s.pct+'% complete':'Before your start'}"><i></i></button>`}).join('')}</div><div class="v5-map-footer"><span>30 days ago</span><span>Today</span></div></div><div class="v5-map-takeaway"><span>${valid.length} days in view</span><b>${last.total?`${diff>0?'+':''}${diff} pts from prior week`:'Keep logging to unlock comparisons'}</b></div></section>`;
   }
+  function smallNextStep(){
+    const today=dateLocal(),remaining=scheduledHabits(today).filter(habit=>!completed(habit,today));
+    const first=remaining[0],minutes=(state.focusSessions||[]).filter(x=>x.date===today).reduce((n,x)=>n+Number(x.minutes||0),0);
+    const activity=first?{title:first.title,detail:first.kind==='binary'?'One simple check-in':`Your target: ${durationLabel(first.target,first.unit)}`,route:'habits'}:{title:'Reflect on today',detail:'Your small efforts deserve to be noticed',route:'overview'};
+    return `<section class="avenory-next-beat" aria-label="Your next meaningful step"><div class="avenory-beat-head"><span class="avenory-eyebrow">THE NEXT SMALL THING</span><span aria-hidden="true">✦ / ${String(challengeDay()||1).padStart(2,'0')}</span></div>
+      <h3>${h(activity.title)}</h3><p>${h(activity.detail)}</p><button type="button" data-nav="${activity.route}">Continue here <span>↗</span></button>
+      <div class="avenory-beat-line"><span>${Math.round(minutes)} min of focus logged today</span><i></i><span>${remaining.length} habits waiting</span></div>
+    </section>`;
+  }
   function liveQuote(){
-    const candidate=(currentQuoteIndex()+ui.quoteOffset)%QUOTES.length;
-    return `<section class="v5-quote-switch" aria-label="A thought for today"><span>WORDS FOR THIS MOMENT</span><div><blockquote>“${h(QUOTES[candidate])}”</blockquote><button data-action="next-quote" title="Show another thought" aria-label="Show another motivational thought">↻</button></div><small>Tap ↻ for another thought. Your actions are the real story.</small></section>`;
+    const q=quoteSelection('moment');
+    const chapter={morning:'FIRST LIGHT',day:'THE MIDDLE OF THE STORY',evening:'THE GENTLE CLOSE',gentle:'A SOFTER MOMENT',momentum:'MOMENTUM, QUIETLY'}[q.context]||'HERE AND NOW';
+    const total=dayScore(dateLocal());
+    return `<section class="avenory-editorial" data-quote-panel data-quote-key="${q.context}:${q.index}" aria-label="A changing, personal reflection">
+      <div class="avenory-editorial-stage" aria-hidden="true"><span class="avenory-letter-a">A</span><div class="avenory-letter-orbit"></div><span class="avenory-stage-top">AN OPEN LETTER<br>TO THE PERSON BECOMING</span><span class="avenory-stage-caption">VOL. ${String(challengeDay()||1).padStart(2,'0')} / 90 &nbsp; ✦ &nbsp; AVENORY</span></div>
+      <div class="avenory-editorial-copy"><div class="avenory-editorial-top"><span class="avenory-eyebrow">FIELD NOTES <span aria-hidden="true">/</span> ${h(chapter)}</span><span class="avenory-issue">No. ${String(q.index+1).padStart(2,'0')} <button class="avenory-bookmark" data-keep-thought="${h(q.context)}" aria-label="Save this thought to your notes" title="Keep this thought">${ico('heart','i-sm')}</button></span></div>
+        <span class="avenory-giant-quote" aria-hidden="true">“</span><blockquote>${h(q.line)}</blockquote><p class="avenory-quote-after">${h(q.aside)}</p><div class="avenory-editorial-rule"></div><div class="avenory-editorial-bottom"><span><i class="avenory-presence-dot"></i> A new thought arrives as your day unfolds</span><strong>${total.done} / ${total.total} acts of intention today</strong></div>
+      </div>
+    </section>`;
   }
   function overview(){const st=stats(),day=challengeDay(),score=dayScore(chosenDate()),name=state.settings.name||'You',todayXP=xpBreakdown(chosenDate());
     return `<div class="v4-overview">
     <div class="v4-greeting"><div><span class="v4-micro-label">YOUR PERSONAL FIELD NOTES · ${h(niceDate(dateLocal(),{weekday:'long',month:'long',day:'numeric'}).toUpperCase())}</span><h1>Good ${new Date().getHours()<12?'morning':new Date().getHours()<18?'afternoon':'evening'}, ${h(name)}<span>.</span></h1><p>Your next version is built in moments like this.</p></div><div class="v4-greeting-tools"><button class="btn btn-neutral" data-nav="sanctuary">${ico('heart','i-sm')} Take a pause</button><button class="btn btn-primary" data-nav="focus">${ico('play','i-sm')} Enter focus</button></div></div>
-    <section class="v4-command-hero"><div class="v4-hero-grain" aria-hidden="true"></div><div class="v4-hero-copy"><span class="v4-hero-eyebrow">✦ &nbsp; EDITION 01 &nbsp; / &nbsp; BECOME, ONE DAY AT A TIME</span><h2>Your ordinary days.<br><em>An extraordinary life.</em></h2><p>Make one promise to yourself. Keep it. Then build on the evidence.</p><div class="v4-hero-pill-row"><span>↗ Day ${day} / 90</span><span>✳ ${st.streak}-day rhythm</span><span>◇ Level ${st.level}</span></div><div class="v4-hero-cta"><button data-nav="habits">Open daily habits ${ico('arrow-right','i-sm')}</button><button data-nav="insights">Explore your trajectory ↗</button></div></div><div class="v4-orbit-portal" style="--p:${score.pct}%" role="img" aria-label="${score.pct}% of today's habits completed"><div class="v4-orbit-satellite sat-one"></div><div class="v4-orbit-satellite sat-two"></div><div class="v4-orbit-core"><span>TODAY'S PROOF</span><strong>${score.pct}<i>%</i></strong><small>${score.done} OF ${score.total} HABITS</small></div></div><span class="v4-hero-index" aria-hidden="true">01—90 / EVOLUTION</span></section>
+    <section class="v4-command-hero"><div class="v4-hero-grain" aria-hidden="true"></div><div class="v4-hero-copy"><span class="v4-hero-eyebrow">✦ &nbsp; YOUR OWN EDITION &nbsp; / &nbsp; SMALL DAYS. BRAVE CHANGES.</span><h2>Make room for<br><em>who you become.</em></h2><p>Not a perfect life. A life built with intention—one real choice at a time.</p><div class="avenory-hero-line"><span class="avenory-hero-glyph">${brandGlyph('tiny')}</span><span>EVERY DAY HOLDS A NEW BEGINNING</span></div><div class="v4-hero-pill-row"><span>↗ Day ${day} / 90</span><span>✳ ${st.streak}-day rhythm</span><span>◇ Level ${st.level}</span></div><div class="v4-hero-cta"><button data-nav="habits">Open daily habits ${ico('arrow-right','i-sm')}</button><button data-nav="insights">Explore your trajectory ↗</button></div></div><div class="v4-orbit-portal" style="--p:${score.pct}%" role="img" aria-label="${score.pct}% of today's habits completed"><div class="v4-orbit-satellite sat-one"></div><div class="v4-orbit-satellite sat-two"></div><div class="v4-orbit-core"><span>TODAY'S PROOF</span><strong>${score.pct}<i>%</i></strong><small>${score.done} OF ${score.total} HABITS</small></div></div><span class="v4-hero-index" aria-hidden="true">01—90 / EVOLUTION</span></section>
     ${liveQuote()}
     <section class="v4-numbers" aria-label="Current progress statistics"><button data-nav="rewards"><span class="v4-micro-label">LIFETIME EXPERIENCE</span><strong>${st.xp.toLocaleString()} <i>XP</i></strong><small>Earned by doing, not tapping twice ↗</small></button><button data-nav="insights"><span class="v4-micro-label">CHALLENGE CONSISTENCY</span><strong>${st.consistency}<i>%</i></strong><small>Your tracked journey ↗</small></button><button data-nav="insights"><span class="v4-micro-label">CURRENT RHYTHM</span><strong>${st.streak} <i>DAYS</i></strong><small>Keep building momentum ↗</small></button><button data-nav="rewards"><span class="v4-micro-label">YOUR REWARD WALLET</span><strong>${availableXp().toLocaleString()} <i>XP</i></strong><small>Use it for something meaningful ↗</small></button></section>
-    <div class="v4-dashboard-grid"><div class="v4-dashboard-main"><div class="v4-northstar card"><div><span class="v4-micro-label">✳ YOUR NORTH STAR</span><h3>What matters most today?</h3><p>Write one clear intention, not a complicated plan.</p></div><form id="northstar-form" class="v4-northstar-form"><label class="sr-only" for="northstar">Today's personal intention</label><input id="northstar" class="input" name="northStar" maxlength="150" placeholder="e.g. Finish my research, protect my attention…" value="${h(state.settings.northStar||'')}"><button class="btn btn-primary" type="submit" aria-label="Save intention">${ico('arrow-right','i-sm')} <span>Set intention</span></button></form></div>${nextMove()}${todayHabits()}${pulseMap()}${ninetyAtlas(true)}${periodChartMini()}</div><div class="v4-dashboard-side">${dailyXpCard()}${smartSignal()}${miniWeek()}${reflection()}<div class="v4-side-quote"><span>✦ AFTER HOURS</span><p>“${h(QUOTES[(currentQuoteIndex()+6)%QUOTES.length])}”</p><button data-nav="sanctuary">Open the reset space ↗</button></div></div></div>
-    <div class="v4-footer-note">✦ MAKE THE DAYS COUNT. LET THE DAYS MAKE YOU. <span>AVENORY / YOUR OWN EDITION</span></div>
+    <div class="v4-dashboard-grid"><div class="v4-dashboard-main"><div class="v4-northstar card"><div><span class="v4-micro-label">✳ YOUR NORTH STAR</span><h3>What matters most today?</h3><p>Write one clear intention, not a complicated plan.</p></div><form id="northstar-form" class="v4-northstar-form"><label class="sr-only" for="northstar">Today's personal intention</label><input id="northstar" class="input" name="northStar" maxlength="150" placeholder="e.g. Finish my research, protect my attention…" value="${h(state.settings.northStar||'')}"><button class="btn btn-primary" type="submit" aria-label="Save intention">${ico('arrow-right','i-sm')} <span>Set intention</span></button></form></div>${nextMove()}${todayHabits()}${pulseMap()}${ninetyAtlas(true)}${periodChartMini()}</div><div class="v4-dashboard-side">${dailyXpCard()}${smartSignal()}${miniWeek()}${reflection()}${smallNextStep()}<aside class="avenory-afterglow"><div class="avenory-afterglow-head"><span class="avenory-eyebrow">YOUR BREATHING ROOM</span><span aria-hidden="true">◌</span></div><div class="avenory-afterglow-ring" aria-hidden="true">${brandGlyph('glow')}</div><h3>It's okay to<br><em>begin again.</em></h3><p>Slow down for one minute. Come back with a clearer mind.</p><button data-nav="sanctuary">Take a gentle reset ${ico('arrow-right','i-sm')}</button></aside></div></div>
+    <div class="v4-footer-note"><span>AVENORY <b>✦</b> SMALL DAYS. BRAVE CHANGES.</span><a class="avenory-maker-token" href="mailto:alsami1070@gmail.com" aria-label="AVENORY, independently designed by Al Sami; contact by email"><span class="avenory-maker-monogram" aria-hidden="true">as<span>·</span></span><span><b>THE MAKER’S MARK</b><strong>Al Sami</strong></span><span class="avenory-maker-arrow">↗</span></a></div>
     </div>`;
   }
   function periodChartMini(){const data=Array.from({length:7},(_,i)=>{const date=shiftDay(dateLocal(),i-6);return {date,score:date>=state.settings.startDate&&date<=endDate()?dayScore(date):{pct:0,total:0}};});
@@ -448,7 +702,7 @@
       <div class="heatmap">${dates.map(d=>{const future=d>dateLocal(),s=dayScore(d);const cls=future?'future':s.pct>=75?'high':s.pct>=40?'mid':s.pct>0?'low':'';return `<button type="button" class="heat-cell ${cls}" data-jump-day="${d}" ${future?'disabled':''} title="${niceDate(d,{weekday:'long',month:'short',day:'numeric'})} — ${future?'upcoming':`${s.done}/${s.total} habits (${s.pct}%)`}" aria-label="${d}: ${future?'upcoming':`${s.pct}% complete; open daily record`}"></button>`}).join('')}</div>
       <div class="heat-legend"><span>Less</span><i class="legend-square"></i><i class="legend-square low"></i><i class="legend-square mid"></i><i class="legend-square high"></i><span>More</span></div></div>
     <div class="insight-main"><div class="card"><div class="section-header"><div><span class="mini-eyebrow">WHAT THE NUMBERS SAY</span><h2 class="section-title">Habits to celebrate</h2><p class="section-sub">Consistency across your elapsed scheduled days</p></div>${ico('checks')}</div><div class="performance-list">${ranking.length?ranking.map(x=>`<div><div class="performance-line"><span>${h(x.habit.title)}</span><span>${x.done}/${x.total} · ${x.pct}%</span></div><div class="progress-track" style="height:7px"><div class="progress-fill" style="width:${x.pct}%"></div></div></div>`).join(''):'<p class="section-sub">Add a habit and start your 90 days to see this breakdown.</p>'}</div></div>
-      ${trendInsight()}</div>${insightOverview()}<div class="v4-data-deep-dive">${ninetyAtlas()}${weekRhythm()}</div>${quoteInlay('reflect')}`;
+      ${trendInsight()}</div>${insightOverview()}<div class="v4-data-deep-dive">${ninetyAtlas()}${weekRhythm()}</div>${quoteInlay('insights')}`;
   }
   
   function rewardsPage(){const st=stats(),rewards=rewardMilestones(),unlocked=rewards.filter(r=>r[2]).length,all=[...rewardCatalog,...(state.customRewards||[])];
@@ -469,12 +723,12 @@
       <form id="reminder-form" style="margin-top:18px"><div class="field-inline"><div class="field"><label for="morning-time">Morning check-in</label><input id="morning-time" name="morning" type="time" class="input" value="${h(s.morning)}"></div><div class="field"><label for="evening-time">Evening reflection</label><input id="evening-time" name="evening" type="time" class="input" value="${h(s.evening)}"></div></div><button class="btn btn-neutral btn-sm" type="submit">Save reminder times</button></form>
       <div class="notification-health"><span class="status-pulse"></span><div><b>${h(notificationsStatus())}</b><small>On-page alerts require the site to be running and a supporting browser.</small></div></div><div class="setting-actions" style="margin:12px 0"><button class="btn btn-neutral btn-sm" type="button" data-action="test-notification">${ico('bell','i-sm')} Test notification</button></div><div class="divider"></div><button class="btn btn-ghost btn-wide" data-action="export-calendar">${ico('calendar','i-sm')} Download 90-day calendar reminders</button><p style="margin-top:13px">Calendar alerts can work after the site is closed, if your calendar app imports the file and has alerts enabled. Browser alerts only run while AVENORY is open; true closed-app push requires a separate server or native app. Re-importing the same .ics may create duplicate events in some calendar apps.</p></section>
     <section class="card settings-card"><h3>Back up & take your data</h3><p>No subscription or advertising. Guest mode saves on this device; signed-in mode can sync through a connected Supabase account.</p><div class="setting-actions"><button class="btn btn-neutral" data-action="export-json">${ico('download','i-sm')} Export backup</button><button class="btn btn-neutral" data-action="export-csv">${ico('chart','i-sm')} Export CSV</button><label class="btn btn-neutral" for="import-file" style="cursor:pointer">${ico('upload','i-sm')} Import backup</label><input type="file" accept="application/json,.json" id="import-file" style="display:none" data-import-file></div><div class="disclaimer" style="margin-top:22px">Clearing browser storage, switching devices, or using private mode may remove locally saved data. Export a backup regularly. Importing replaces the current data on this device.</div></section>
-    <section class="card settings-card"><h3>Install & manage</h3><p>Once hosted on HTTPS, you can install AVENORY to your phone or desktop from your browser's “Add to Home Screen” or “Install app” menu.</p><div class="setting-actions"><button class="btn btn-neutral" data-action="install">${ico('download','i-sm')} Install website as app</button><button class="btn btn-danger" data-action="reset">${ico('trash','i-sm')} Reset all data</button></div><div class="divider"></div><p>Made to be accessible, adaptable, and free. Water and sleep targets are personal goals, not medical advice; adjust them to fit your needs.</p><div class="smallcaps">AVENORY · Edition Five · Private, cloud-ready PWA</div></section></div>`;}
+    <section class="card settings-card"><h3>Install & manage</h3><p>Once hosted on HTTPS, you can install AVENORY to your phone or desktop from your browser's “Add to Home Screen” or “Install app” menu.</p><div class="setting-actions"><button class="btn btn-neutral" data-action="install">${ico('download','i-sm')} Install website as app</button><button class="btn btn-danger" data-action="reset">${ico('trash','i-sm')} Reset all data</button></div><div class="divider"></div><p>Made to be accessible, adaptable, and free. Water and sleep targets are personal goals, not medical advice; adjust them to fit your needs.</p><div class="avenory-made-by"><span class="avenory-seal-symbol">${brandGlyph('tiny')}</span><div><span class="avenory-eyebrow">THE MAKER’S SIGNATURE</span><strong>Thoughtfully crafted by Al Sami</strong><a href="mailto:alsami1070@gmail.com">alsami1070@gmail.com ↗</a></div></div><div class="smallcaps">AVENORY · SMALL DAYS. BRAVE CHANGES. · PRIVATE BY DESIGN</div></section></div>`;}
   function render(){const theme=state.settings.theme==='dark'?'dark':'light';document.documentElement.dataset.theme=theme;document.querySelector('meta[name="theme-color"]').setAttribute('content',theme==='dark'?'#121524':'#f8f9fc');ui.date=clampDate(ui.date);
     const pages={overview,habits:habitsPage,projects:projectsPage,focus:focusPage,insights:insightsPage,rewards:rewardsPage,sanctuary:sanctuaryPage,settings:settingsPage,account:accountPage};
-    if(ui.authGate && !account){document.getElementById('app').innerHTML=authPage();return;} const main=(pages[ui.page]||overview)();document.getElementById('app').innerHTML=`<a class="v4-skip" href="#main-content">Skip to main content</a><div class="shell">${sideNav()}<main id="main-content" class="main">${mobileTop()}<div class="content">${topbar()}${main}</div></main></div>${mobileNav()}`;updateTimerVisual();
+    if(ui.authGate && !account){document.getElementById('app').innerHTML=authPage();return;} const main=(pages[ui.page]||overview)();const footerThought=['overview','focus','sanctuary','insights'].includes(ui.page)?'':quoteInlay(ui.page);document.getElementById('app').innerHTML=`<a class="v4-skip" href="#main-content">Skip to main content</a><div class="shell">${sideNav()}<main id="main-content" class="main">${mobileTop()}<div class="content">${topbar()}${main}${footerThought}</div></main></div>${mobileNav()}`;updateTimerVisual();
   }
-  function navigate(page){if(!nav.some(x=>x[0]===page))return;closeCommand();ui.page=page;render();window.scrollTo({top:0,behavior:'instant'});}
+  function navigate(page){if(!nav.some(x=>x[0]===page))return;flushNoteDraft();closeCommand();ui.page=page;render();window.scrollTo({top:0,behavior:'instant'});}
   function newId(prefix){return `${prefix}-${typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)}`;}
   const colorIcons = ['shield','leaf','heart','droplet','bed','brain','phone','book','clock','activity','sun','sparkles','target','coffee','pencil','checks'];
   let lastActiveElement=null;
@@ -557,11 +811,11 @@
     const isSignup=authMethod==='signup';
     const isForgot=authMethod==='forgot';
     const isUpdate=authMethod==='update-password';
-    const formTitle=!cloudEnabled?'Your becoming starts here.':isSignup?'Create your account':isForgot?'Reset your password':isUpdate?'Choose a new password':'Welcome back.';
+    const formTitle=!cloudEnabled?'Your becoming starts here.':isSignup?'Create your account':isForgot?'Reset your password':isUpdate?'Choose a new password':'Pick up where you left off.';
     const formSubtitle=!cloudEnabled?'Start locally now, then connect your private account when you are ready.':isSignup?'Create a private space for your next chapter.':isForgot?'Enter your account email. We will send a secure password reset link.':isUpdate?'Enter at least 6 characters for your new private password.':'Your progress is still here. Pick up where you left off.';
 
-    return `<div class="auth-shell"><div class="auth-aside v4-auth-aside"><div class="auth-mark"><span>✶</span> <b>AVENORY<span style="color:#d7ff8f">.</span></b></div><div class="auth-aside-content"><span class="auth-overline">WELCOME TO YOUR OWN EVOLUTION</span><h1>Become the person<br>you keep<br><em>promising to be.</em></h1><p>Ninety days. A beautifully deliberate life. Small actions, visible evolution, and room to begin again.</p>${!cloudEnabled?`<button class="v4-auth-hero-cta" data-action="guest-enter">Explore privately <span aria-hidden="true">↗</span></button>`:''}<div class="auth-mosaic" aria-hidden="true">${Array.from({length:90},(_,i)=>`<span class="${i<37?'lit':i<60?'half':''}" style="--i:${i%9}"></span>`).join('')}</div><div class="auth-quote">“You are not behind. You are becoming.” <span>YOUR STORY BEGINS WITH A SINGLE CHOICE</span></div></div><div class="auth-footer">PRIVATE BY DESIGN · YOUR PACE · 90 DAYS</div></div>
-      <div class="auth-form-area"><div class="auth-form-wrap"><div class="auth-heading"><div class="auth-label">A PRIVATE WORLD CALLED AVENORY <span>✳</span></div><h2>${formTitle}</h2><p>${formSubtitle}</p></div>
+    return `<div class="auth-shell"><div class="auth-aside v4-auth-aside"><div class="auth-mark"><span class="avenory-login-mark">${brandGlyph()}</span><b>AVENORY<span style="color:#e4b8a0">.</span></b></div><div class="auth-aside-content"><span class="auth-overline">WELCOME TO YOUR OWN EVOLUTION</span><h1>Make room for<br><em>who you become.</em></h1><p>A beautifully simple place to build habits, focus deeply, and see the story of your growth unfold—one day at a time.</p><div class="avenory-auth-benefits"><span>01 / Track what matters</span><span>02 / Protect your focus</span><span>03 / See how you grow</span></div>${!cloudEnabled?`<button class="v4-auth-hero-cta" data-action="guest-enter">Explore privately <span aria-hidden="true">↗</span></button>`:''}<div class="auth-mosaic" aria-hidden="true">${Array.from({length:90},(_,i)=>`<span class="${i<37?'lit':i<60?'half':''}" style="--i:${i%9}"></span>`).join('')}</div><div class="auth-quote"><span>AN INVITATION, NOT A DEMAND</span><p>“${h(quoteSelection('morning').line)}”</p><i>✦</i></div></div><div class="auth-footer">AVENORY / A PERSONAL GROWTH STUDIO <a href="mailto:alsami1070@gmail.com">CRAFTED BY AL SAMI ↗</a></div></div>
+      <div class="auth-form-area"><div class="auth-form-wrap"><div class="auth-heading"><div class="auth-label"><span class="avenory-login-label-mark">✳</span> YOUR PERSONAL SPACE · AVENORY</div><h2>${formTitle}</h2><p>${formSubtitle}</p></div>
       ${cloudEnabled?`
         <form id="auth-form" class="auth-form">
           ${!isUpdate?`<div class="field"><label for="auth-email">Email address</label><input id="auth-email" class="input" type="email" name="email" autocomplete="email" placeholder="you@example.com" required maxlength="254"></div>`:''}
@@ -587,7 +841,7 @@
           </button>
         `:''}
       `:`<div class="auth-offline-info"><strong>Account setup is one step away.</strong><p>To use secure cloud accounts, connect your free Supabase project using the setup guide. Until then, explore the complete website locally.</p></div>`}
-      <div class="auth-separator"><span>or</span></div><button class="btn btn-neutral btn-wide auth-guest" data-action="guest-enter">${ico('arrow-right','i-sm')} Continue privately on this device</button><p class="auth-smallprint">Zero subscriptions required. Guest data stays in this browser. Accounts use Supabase authentication; verify your email if requested.</p></div></div></div>`;
+      <div class="auth-separator"><span>or keep it simple</span></div><button class="btn btn-neutral btn-wide auth-guest" data-action="guest-enter">${ico('arrow-right','i-sm')} Continue privately on this device</button><p class="auth-smallprint">Keep your place. This device remembers your signed-in session; changes made offline wait to sync when connection returns. Guest entries stay in this browser.</p></div></div></div>`;
   }
   function initiateGoogleAuth(){
     if(!cloudEnabled){toast('Connect Supabase first. See setup guide.');return;}
@@ -635,12 +889,12 @@
     }
   }
   async function bootstrapAccount(user){
-    account={id:user.id,email:user.email};currentStore=localCacheKey(user.id);ui.authGate=false;authBusy=false;
+    account={id:user.id,email:user.email};if(cloudSession)storeSession({user});currentStore=localCacheKey(user.id);ui.authGate=false;authBusy=false;
     const raw=localStorage.getItem(currentStore);let cached=null;
     if(raw){try{cached=sanitizeState(JSON.parse(raw))}catch{}}
     let row=await remoteRow();
     if(!row){
-      const hasGuestEdits=Object.keys(state.logs).length>0||state.projects.length>0||state.customRewards.length>0||state.focusSessions?.length>0||state.habits.length!==habitDefaults(state.settings.startDate).length;
+      const hasGuestEdits=Object.keys(state.logs).length>0||state.projects.length>0||state.customRewards.length>0||state.focusSessions?.length>0||!!state.settings.focusPreferences||state.habits.length!==habitDefaults(state.settings.startDate).length;
       if(cached)state=cached;
       else if(hasGuestEdits&&confirm('Import your current guest progress into this account? Choose Cancel to start with a clean tracker.'))state=sanitizeState(state);
       else state=freshState();
@@ -652,7 +906,7 @@
       if(cached&&meta.dirty){state=cached;cloudRevision=Number(meta.revision||0);unsynced=true;if(cloudRevision===Number(row.revision)){cloudError='';cloudStatus='Pending device changes';scheduleSync();}else{cloudError='Local edits need review before cloud sync';cloudStatus='Sync conflict — action needed';}}
       else {state=sanitizeState(row.data);localStorage.setItem(currentStore,JSON.stringify(state));setCloudMeta({revision:cloudRevision,dirty:false});unsynced=false;cloudError='';cloudStatus='Up to date on all devices';}
     }
-    ui.date=dateLocal();render();toast(`Welcome back${state.settings.name&&state.settings.name!=='You'?', '+state.settings.name:''}!`);
+    applySavedFocusPreferences();ui.date=dateLocal();render();toast(`Welcome back${state.settings.name&&state.settings.name!=='You'?', '+state.settings.name:''}!`);
   }
   async function handleAuth(vals){
     if(!cloudEnabled){toast('Connect Supabase first. See setup guide.');return;}
@@ -752,12 +1006,35 @@
     }
     return false;
   }
+  function restoreAccountCache(note='Using saved account on this device'){
+    const user=cloudSession?.user || rememberedUser;
+    if(!user?.id)return false;
+    account={id:user.id,email:user.email||''};currentStore=localCacheKey(account.id);
+    try{const raw=localStorage.getItem(currentStore);if(raw)state=sanitizeState(JSON.parse(raw));}
+    catch(e){console.warn('Account cache cannot be read:',e);}
+    const meta=cloudMeta();cloudRevision=Number(meta.revision||0);unsynced=!!meta.dirty;
+    cloudStatus=note;ui.authGate=false;applySavedFocusPreferences();render();return true;
+  }
   async function resumeAuth(){
     if(!cloudEnabled)return;
-    try{const saved=localStorage.getItem(SESSION_KEY);if(!saved)return;cloudSession=JSON.parse(saved);const token=await ensureToken();const user=await cloudRequest('/auth/v1/user',{token});if(user?.id)await bootstrapAccount(user);}
-    catch(e){
-      if(!navigator.onLine&&cloudSession?.user?.id){account={id:cloudSession.user.id,email:cloudSession.user.email};currentStore=localCacheKey(account.id);try{state=sanitizeState(JSON.parse(localStorage.getItem(currentStore)))}catch{state=freshState()}cloudRevision=Number(cloudMeta().revision||0);unsynced=!!cloudMeta().dirty;cloudStatus='Offline · signed-in cache';ui.authGate=false;render();return;}
-      cloudSession=null;localStorage.removeItem(SESSION_KEY);cloudStatus='Session expired or account unavailable — sign in again';render();}
+    try{
+      const saved=localStorage.getItem(SESSION_KEY);if(!saved)return;
+      cloudSession=JSON.parse(saved);
+      if(!navigator.onLine){restoreAccountCache('Offline · changes stay on this device');return;}
+      const token=await ensureToken();
+      const user=await cloudRequest('/auth/v1/user',{token});
+      if(user?.id)await bootstrapAccount(user);
+    }catch(e){
+      const message=String(e.message||'');
+      const invalid=/invalid refresh token|refresh token not found|invalid jwt|jwt expired|401|403|session not found/i.test(message);
+      if(invalid){
+        cloudSession=null;account=null;localStorage.removeItem(SESSION_KEY);
+        currentStore=STORE;state=loadState();cloudStatus='Your session expired. Sign in to continue.';
+        ui.authGate=true;render();
+      }else if(!restoreAccountCache('Connection interrupted · your session and progress are kept')){
+        cloudStatus='Cannot reach the service. Please try again.';render();
+      }
+    }
   }
   function scheduleSync(){if(!account||cloudError)return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>void flushSync(),1400);}
   async function flushSync(showToast=false){
@@ -779,7 +1056,7 @@
     finally{syncInFlight=false;renderSyncLabel();}
   }
   async function refreshCloud(){if(!account||unsynced||syncInFlight||!navigator.onLine)return;
-    try{const row=await remoteRow();if(!row)return;if(Number(row.revision)>cloudRevision){state=sanitizeState(row.data);cloudRevision=Number(row.revision);localStorage.setItem(currentStore,JSON.stringify(state));setCloudMeta({revision:cloudRevision,dirty:false});cloudStatus='Updated from another device';render();}}
+    try{const row=await remoteRow();if(!row)return;if(Number(row.revision)>cloudRevision){state=sanitizeState(row.data);applySavedFocusPreferences();cloudRevision=Number(row.revision);localStorage.setItem(currentStore,JSON.stringify(state));setCloudMeta({revision:cloudRevision,dirty:false});cloudStatus='Updated from another device';render();}}
     catch(e){cloudStatus=`Cloud unreachable · using device data`;renderSyncLabel();}
   }
   function renderSyncLabel(){
@@ -794,12 +1071,22 @@
         if(!confirm('Use cloud data? This device’s unsynced version will be downloaded as a backup first.'))return;
         exportJson();state=sanitizeState(row?.data||freshState());cloudRevision=Number(row?.revision||0);unsynced=false;cloudError='';cloudStatus='Cloud version restored';localStorage.setItem(currentStore,JSON.stringify(state));setCloudMeta({revision:cloudRevision,dirty:false});render();toast('Cloud data restored; previous data backed up.');return;
       }
-      if(!confirm('Replace the cloud snapshot with THIS device’s data? Other devices will receive your changes when they refresh. Export a backup first.'))return;
+      if(!confirm('Use this device’s version? The existing cloud version will be backed up first. Other devices will see the replacement after sync.'))return;
+      // Preserve both sides before an explicitly authorized conflict resolution.
+      exportJson();
+      if(row?.data)dataDownload(`avenory-cloud-before-conflict-${dateLocal()}.json`,JSON.stringify(row.data,null,2),'application/json');
+      cloudRevision=Number(row?.revision||0);
+      cloudError='';unsynced=true;syncCount++;
+      cloudStatus='Resolving conflict with a revision-checked save';
+      setCloudMeta({revision:cloudRevision,dirty:true});
+      await flushSync(true);
+      if(cloudError){toast('Another edit arrived. Please review the conflict again; your device copy is safe.');}
+      else{render();toast('Device changes synced. Both versions were backed up.');}
     }catch(e){toast(`Could not resolve yet: ${e.message}`);}
   }
   async function signOut(){
     if(unsynced&&!confirm('Some account edits have not synced. They will remain in this browser and can be recovered by signing in here again. Sign out?'))return;
-    const oldToken=cloudSession?.access_token;account=null;cloudSession=null;localStorage.removeItem(SESSION_KEY);currentStore=STORE;state=loadState();cloudRevision=0;cloudError='';cloudStatus='Local mode';ui.authGate=true;authMethod='signin';render();
+    const oldToken=cloudSession?.access_token;account=null;cloudSession=null;localStorage.removeItem(SESSION_KEY);currentStore=STORE;state=loadState();applySavedFocusPreferences();cloudRevision=0;cloudError='';cloudStatus='Local mode';ui.authGate=true;authMethod='signin';render();
     if(oldToken)cloudRequest('/auth/v1/logout',{method:'POST',token:oldToken}).catch(()=>{});
   }
 
@@ -855,7 +1142,7 @@
     render();toast(oldMode==='focus'?'Session complete! Focus minutes added to your log.':'Break finished. You can start your next focus block.');
   }
   function finishTimer(){timerIntervalFinished();}
-  function updateTimerVisual(){const count=document.getElementById('timer-counter');if(!count)return;const secs=focusRun.mode==='stopwatch'?(focusRun.elapsed||0):(focusRun.remaining||0);count.textContent=formatClock(secs);const dial=document.getElementById('timer-dial');if(dial)dial.style.setProperty('--deg',`${focusRun.mode==='stopwatch'?Math.min(360,(secs%3600)/3600*360):clamp((1-secs/Math.max(1,focusRun.duration))*360,0,360)}deg`);const live=document.getElementById('timer-aria');if(live)live.textContent=`${Math.floor(secs/60)} minutes ${secs%60} seconds ${focusRun.mode} ${focusRun.running?'running':'paused'}`;if(focusRun.running&&(document.title.startsWith('AVENORY')||document.title.startsWith('VOWMERA')))document.title=`${formatClock(secs)} · AVENORY`;else if(!focusRun.running)document.title='AVENORY · Become, one day at a time';}
+  function updateTimerVisual(){const count=document.getElementById('timer-counter');if(!count)return;const secs=focusRun.mode==='stopwatch'?(focusRun.elapsed||0):(focusRun.remaining||0);count.textContent=formatClock(secs);const dial=document.getElementById('timer-dial');if(dial)dial.style.setProperty('--deg',`${focusRun.mode==='stopwatch'?Math.min(360,(secs%3600)/3600*360):clamp((1-secs/Math.max(1,focusRun.duration))*360,0,360)}deg`);const live=document.getElementById('timer-aria');if(live)live.textContent=`${Math.floor(secs/60)} minutes ${secs%60} seconds ${focusRun.mode} ${focusRun.running?'running':'paused'}`;if(focusRun.running&&(document.title.startsWith('AVENORY')||document.title.startsWith('AVENORY')))document.title=`${formatClock(secs)} · AVENORY`;else if(!focusRun.running)document.title='AVENORY · Make today matter';}
   function todayFocusMinutes(date=dateLocal()){return (state.focusSessions||[]).filter(x=>x.date===date).reduce((n,x)=>n+Number(x.minutes||0),0);}
   function recentFocus(){return (state.focusSessions||[]).slice(-7).reverse().map(x=>`<div class="session-row"><span class="session-icon">${ico('clock')}</span><div><b>${h(x.task|| (x.mode==='stopwatch'?'Open focus session':'Deep focus'))}</b><small>${h(niceDate(x.date))} · ${x.mode==='stopwatch'?'Stopwatch':'Timer'}</small></div><strong>${round(x.minutes,1)} min</strong></div>`).join('')||'<p class="no-sessions">Your focus story starts with your first session.</p>';}
   function focusSettingsModal(){modal(`<div class="modal-titlebar"><h2>Customize focus and breaks</h2><button class="icon-btn" data-action="close-modal" aria-label="Close">${ico('x')}</button></div><form id="focus-settings-form"><p class="subhead">Every interval and preference is yours to choose.</p><div class="settings-fields"><div class="field"><label for="fs-focus">Focus minutes</label><input id="fs-focus" class="input" name="focus" type="number" min="1" max="180" required value="${focusPrefs.focus}"></div><div class="field"><label for="fs-short">Short break (minutes)</label><input id="fs-short" class="input" name="short" type="number" min="1" max="60" required value="${focusPrefs.short}"></div><div class="field"><label for="fs-long">Long break (minutes)</label><input id="fs-long" class="input" name="long" type="number" min="1" max="90" required value="${focusPrefs.long}"></div><div class="field"><label for="fs-rounds">Cycles before long break</label><input id="fs-rounds" class="input" name="rounds" type="number" min="1" max="12" required value="${focusPrefs.rounds}"></div></div><label class="toggle-line"><span><b>Auto-start next interval</b><small>Only when the website is open and active.</small></span><input class="switch" type="checkbox" name="autoNext" ${focusPrefs.autoNext?'checked':''}></label><label class="toggle-line"><span><b>Completion sound</b><small>A gentle chime when an interval ends.</small></span><input class="switch" type="checkbox" name="sound" ${focusPrefs.sound?'checked':''}></label><button class="btn btn-primary btn-wide" type="submit">Save timer preferences</button></form>`);}
@@ -886,7 +1173,7 @@
     <section class="card studio-analytics"><span class="mini-eyebrow">YOUR FOCUS MOMENTUM</span><div class="studio-stats"><div><strong>${round(todayMinutes,1)}<small>min</small></strong><span>Today</span></div><div><strong>${round(last7/60,1)}<small>hr</small></strong><span>Last 7 days</span></div><div><strong>${(state.focusSessions||[]).length}</strong><span>Sessions</span></div></div><div class="studio-history-top"><h3>Recent sessions</h3><span>HISTORY</span></div>${recentFocus()}<div class="studio-help">${ico('sparkles','i-sm')} Keyboard: Space to start/pause · R to reset · Escape to close dialogs</div></section></div></div>${focusParking()}${quoteInlay('focus')}`;
   }
 
-  function handleClick(e){const b=e.target.closest('button,[data-template],[data-quick-qty]');if(!b)return;
+  function handleClick(e){const b=e.target.closest('button,[data-template],[data-quick-qty]');if(!b||b.disabled)return;
     if(b.dataset.nav){navigate(b.dataset.nav);return;}
     if(b.dataset.quickQty){
       const habit=state.habits.find(x=>x.id===b.dataset.quickQty);
@@ -919,11 +1206,23 @@
     if(b.dataset.presetDelete!==undefined){if(focusRun.running){toast('Pause the timer first.');return;}focusPrefs.presets=(focusPrefs.presets||[]).filter((_,i)=>i!==Number(b.dataset.presetDelete));persistFocus();render();return;}
     if(b.dataset.jumpDay){ui.date=clampDate(b.dataset.jumpDay);navigate('overview');return;}
     if(b.dataset.parkRemove!==undefined){state.parkedThoughts=(state.parkedThoughts||[]).filter(x=>x.id!==b.dataset.parkRemove);save();render();toast('Thought cleared from your parking lot.');return;}
+    if(b.dataset.keepThought!==undefined){
+      const chosen=quoteSelection(b.dataset.keepThought),notes=state.settings.savedFieldNotes||[];
+      if(!notes.includes(chosen.line)){
+        state.settings.savedFieldNotes=[...notes,chosen.line].slice(-40);save();toast('Added to your private collection of words.');
+      }else toast('Already in your saved notes.');
+      return;
+    }
+    if(b.dataset.removeThought!==undefined){
+      const index=Number(b.dataset.removeThought);
+      if(Number.isInteger(index)&&index>=0){state.settings.savedFieldNotes=(state.settings.savedFieldNotes||[]).filter((_,i)=>i!==index);save();render();toast('Thought removed.');}
+      return;
+    }
     if(b.dataset.favoriteQuote!==undefined){const i=Number(b.dataset.favoriteQuote),f=state.settings.favoriteQuotes||[];state.settings.favoriteQuotes=f.includes(i)?f.filter(x=>x!==i):[...f,i];save();render();toast(f.includes(i)?'Thought removed from your collection.':'Saved to your collection.');return;}
     if(b.dataset.nav){closeCommand();}
     if(b.dataset.toggle){toggleHabit(b.dataset.toggle);return;}
     if(b.dataset.qty){addQuantity(b.dataset.qty,Number(b.dataset.change));return;}
-    if(b.dataset.mood){editLog(chosenDate()).mood=b.dataset.mood;save();render();toast('+5 XP for showing up and checking in.');return;}
+    if(b.dataset.mood){const log=editLog(chosenDate());const was=log.mood;log.mood=b.dataset.mood;save();render();const chosen=document.querySelector('.avenory-reflection .mood.active');chosen?.classList.add('avenory-mood-selected');if(!was)toast('Your check-in is saved. +5 XP for reflecting ✦');else if(was!==log.mood)toast('Your mood is updated. Thank you for checking in.');return;}
     if(b.dataset.range){ui.insightPeriod=b.dataset.range;ui.insightPick='';render();return;}
     if(b.dataset.pick){ui.insightPick=b.dataset.pick;render();return;}
     if(b.dataset.redeem){redeemReward(b.dataset.redeem);return;}
@@ -956,7 +1255,6 @@
       case 'timer-sound':playChime();toast('Sound test played if audio is enabled.');break;
       case 'save-focus-preset':presetSave();break;
       case 'timer-finish-early':finishEarly();break;
-      case 'next-quote':ui.quoteOffset=(ui.quoteOffset+1)%QUOTES.length;render();break;
       case 'open-login':ui.authGate=true;render();break;
       case 'switch-auth':authMethod=authMethod==='signup'?'signin':'signup';render();break;
       case 'auth-mode':authMethod=b.dataset.mode||'signin';render();break;
@@ -1021,6 +1319,23 @@
     }
     if(form.getAttribute('id')==='reminder-form'){state.settings.morning=String(vals.get('morning')||'08:00');state.settings.evening=String(vals.get('evening')||'21:00');save();render();toast('Reminder times updated.');}
   }
+  let noteSaveHandle=null,noteDirty=false;
+  function flushNoteDraft(){
+    if(noteSaveHandle){clearTimeout(noteSaveHandle);noteSaveHandle=null;}
+    if(!noteDirty)return;
+    noteDirty=false;save();
+    const status=document.getElementById('note-save-status');
+    if(status)status.textContent=account?'✓ Saved · syncing securely':'✓ Saved on this device';
+  }
+  document.addEventListener('input',event=>{
+    const el=event.target;
+    if(el?.dataset?.note===undefined)return;
+    const day=chosenDate();editLog(day).note=String(el.value||'').slice(0,1200);
+    noteDirty=true;clearTimeout(noteSaveHandle);
+    const status=document.getElementById('note-save-status');if(status)status.textContent='Saving…';
+    noteSaveHandle=setTimeout(flushNoteDraft,480);
+  });
+  window.addEventListener('pagehide',flushNoteDraft);
   document.addEventListener('click',handleClick);
   document.addEventListener('submit',handleSubmit);
   document.addEventListener('change',async e=>{
@@ -1038,7 +1353,7 @@
         state=sanitizeState(obj);ui.date=dateLocal();save();render();toast('Backup imported successfully.');
       }catch(err){toast(`Could not import: ${err.message}`);}finally{el.value='';}return;}
     if(el.id==='habit-kind'){const area=document.getElementById('habit-number-fields');if(area)area.style.display=el.value==='binary'?'none':'block';return;}
-    if(el.dataset.note!==undefined){editLog(chosenDate()).note=el.value.slice(0,1200);save();render();toast('Reflection saved.');return;}
+    if(el.dataset.note!==undefined){flushNoteDraft();render();return;}
   });
   document.addEventListener('click',e=>{if(e.target.matches('[data-dismiss-overlay]')){clearInterval(breathHandle);closeModal();} if(e.target.matches('[data-command-close]'))closeCommand();});
   document.addEventListener('keydown',e=>{
@@ -1071,7 +1386,38 @@
   if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1')){
     window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(e=>console.warn('Offline cache unavailable:',e)));
   }
+  let lastDaySeen=dateLocal();
+  let lastQuoteKey='';
+  function updateDailyClock(){
+    const day=dateLocal();
+    if(day!==lastDaySeen){
+      flushNoteDraft();lastDaySeen=day;ui.date=day;
+      render();toast('A new day is here. Your earlier check-ins are safely in your history.');
+      return;
+    }
+    if(ui.page==='overview'&&!ui.authGate){
+      const s=quoteSelection('moment'),key=`${s.context}:${s.index}`;
+      if(lastQuoteKey!==key){lastQuoteKey=key;const old=document.querySelector('[data-quote-panel]');if(old&&old.dataset.quoteKey!==key){
+        const fresh=document.createElement('div');fresh.innerHTML=liveQuote();const next=fresh.firstElementChild;
+        next.classList.add('avenory-editorial-enter');old.replaceWith(next);
+      }}
+    }
+  }
   setInterval(()=>{tickTimer();checkReminders();},1000);
+  setInterval(updateDailyClock,12000);
+  setInterval(()=>{
+    if(ui.authGate)return;
+    document.querySelectorAll('.avenory-field-strip').forEach(el=>{
+      const context=el.dataset.fieldNote;
+      const current=quoteSelection(context);
+      const active=el.querySelector('.avenory-strip-words p');
+      if(active&&active.textContent!==current.line){
+        active.textContent=current.line;
+        const small=el.querySelector('.avenory-strip-words small');if(small)small.textContent=current.aside;
+        el.classList.remove('field-fresh');void el.offsetWidth;el.classList.add('field-fresh');
+      }
+    });
+  },30000);
   setInterval(()=>{if(account&&!unsynced&&!syncInFlight)void refreshCloud()},45000);
   render();
   (async()=>{

@@ -13,10 +13,13 @@ PUBLIC_FILES = [
     'app.js',
     'cloud-config.js',
     'styles.css',
-    'vowmera.css',
-    'edition-five.css',
+    'avenory-core.css',
+    'avenory-components.css',
+    'avenory-signature.css',
+    'avenory-v7.css',
     'manifest.webmanifest',
     'sw.js',
+    '_headers',
 ]
 
 def bundle():
@@ -38,7 +41,7 @@ def bundle():
     print(f"  + assets/ ({len(list(assets_dst.iterdir()))} items)")
 
     # Create Cloudflare Pages Direct Upload ZIP
-    for zip_name in ('avenory-cloudflare-pages.zip', 'vowmera-v5-cloudflare-pages.zip'):
+    for zip_name in ('AVENORY-V7-Deploy.zip',):
         zip_path = ROOT / zip_name
         with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as z:
             for file in DIST.rglob('*'):
@@ -46,7 +49,7 @@ def bundle():
                 z.write(file, arcname)
         print(f"\nCreated clean deployment zip: {zip_path.name} ({zip_path.stat().st_size} bytes)")
     print("Files included:")
-    with zipfile.ZipFile(ROOT / 'avenory-cloudflare-pages.zip', 'r') as z:
+    with zipfile.ZipFile(ROOT / 'AVENORY-V7-Deploy.zip', 'r') as z:
         for info in z.infolist():
             print(f"  - {info.filename}")
 
