@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+*.secret
+*.bak
+local-backups/
+__pycache__/
+.playwright/
+.venv/
+tests/screenshots/
+dist/
+*.zip
